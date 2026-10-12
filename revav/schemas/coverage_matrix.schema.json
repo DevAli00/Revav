@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://revav.dev/schemas/coverage_matrix.schema.json",
+  "title": "Coverage Matrix",
+  "description": "ATT&CK technique coverage with confidence scores and mechanism details",
+  "type": "object",
+  "required": ["product_name", "attack_version", "techniques"],
+  "properties": {
+    "matrix_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "attack_version": {
+      "type": "string",
+      "description": "MITRE ATT&CK framework version (e.g. '15.1')"
+    },
+    "techniques": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["technique_id", "confidence"],
+        "properties": {
+          "technique_id": {
+            "type": "string",
+            "pattern": "^T\\d{4}(\\.\\d{3})?$"
+          },
+          "technique_name": {
+            "type": "string"
+          },
+          "tactic": {
+            "type": "string"
+          },
+          "sub_technique_id": {
+            "type": ["string", "null"],
+            "pattern": "^T\\d{4}\\.\\d{3}$"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Overall detection confidence (0.0 = no coverage, 1.0 = robust multi-layer)"
+          },
+          "mechanisms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["mechanism_id", "mechanism_type"],
+              "properties": {
+                "mechanism_id": { "type": "string" },
+                "mechanism_type": {
+                  "type": "string",
+                  "enum": ["hook", "callback", "rule", "behavioral", "telemetry"]
+                },
+                "mechanism_name": { "type": "string" },
+                "quality": {
+                  "type": "string",
+                  "enum": ["low", "medium", "high"],
+                  "description": "Mechanism quality: low (easily bypassed), medium, high (robust)"
+                },
+                "source_scan_id": { "type": "string" }
+              }
+            }
+          },
+          "coverage_gaps": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Identified gaps in coverage for this technique"
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "total_techniques_assessed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "overall_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Weighted overall coverage score"
+    },
+    "blind_spots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["technique_id", "weakness_class", "severity"],
+        "properties": {
+          "technique_id": {
+            "type": "string",
+            "pattern": "^T\\d{4}(\\.\\d{3})?$"
+          },
+          "technique_name": { "type": "string" },
+          "weakness_class": {
+            "type": "string",
+            "enum": [
+              "zero_coverage", "userland_only", "single_mechanism",
+              "partial_subtechnique", "telemetry_only", "low_confidence"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "description": { "type": "string" },
+          "bypass_feasibility": {
+            "type": "string",
+            "enum": ["trivial", "easy", "medium", "hard"]
+          },
+          "remediation": { "type": "string" }
+        }
+      }
+    },
+    "grade_distribution": {
+      "type": "object",
+      "additionalProperties": { "type": "integer" },
+      "description": "Count of techniques per letter grade (A-F)"
+    },
+    "source_catalog": {
+      "type": "string",
+      "description": "Detection catalog this matrix was built from"
+    },
+    "errors": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

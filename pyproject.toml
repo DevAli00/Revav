@@ -13,9 +13,6 @@ authors = [
     { name = "Ali", email = "alielboury2@gmail.com" },
 ]
 keywords = ["security", "edr", "mitre-attack", "detection-engineering", "reverse-engineering"]
-
-[project.scripts]
-revav = "revav.cli:main"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Information Technology",
@@ -33,6 +30,9 @@ dependencies = [
     "rich>=13.0",
     "mitreattack-python>=3.0",
 ]
+
+[project.scripts]
+revav = "revav.cli:main"
 
 [project.optional-dependencies]
 dev = [

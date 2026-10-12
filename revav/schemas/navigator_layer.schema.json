@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://revav.dev/schemas/navigator_layer.schema.json",
+  "title": "ATT&CK Navigator Layer",
+  "description": "MITRE ATT&CK Navigator layer format for coverage visualization",
+  "type": "object",
+  "required": ["name", "domain", "techniques"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Layer name displayed in Navigator"
+    },
+    "versions": {
+      "type": "object",
+      "properties": {
+        "attack": { "type": "string" },
+        "navigator": { "type": "string" },
+        "layer": { "type": "string" }
+      }
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["enterprise-attack", "mobile-attack", "ics-attack"],
+      "default": "enterprise-attack"
+    },
+    "description": {
+      "type": "string"
+    },
+    "filters": {
+      "type": "object",
+      "properties": {
+        "platforms": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "sorting": {
+      "type": "integer",
+      "description": "Sort order: 0=A-Z, 1=Z-A, 2=score asc, 3=score desc"
+    },
+    "layout": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "enum": ["side", "flat", "mini"]
+        },
+        "aggregateFunction": {
+          "type": "string",
+          "enum": ["average", "min", "max", "sum"]
+        },
+        "showID": { "type": "boolean" },
+        "showName": { "type": "boolean" },
+        "showAggregateScores": { "type": "boolean" },
+        "countUnscored": { "type": "boolean" }
+      }
+    },
+    "hideDisabled": {
+      "type": "boolean"
+    },
+    "techniques": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["techniqueID"],
+        "properties": {
+          "techniqueID": {
+            "type": "string",
+            "pattern": "^T\\d{4}(\\.\\d{3})?$"
+          },
+          "tactic": { "type": "string" },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "color": {
+            "type": "string",
+            "description": "CSS hex color override"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Annotation text"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "value"],
+              "properties": {
+                "name": { "type": "string" },
+                "value": { "type": "string" }
+              }
+            }
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["label", "url"],
+              "properties": {
+                "label": { "type": "string" },
+                "url": { "type": "string", "format": "uri" }
+              }
+            }
+          },
+          "showSubtechniques": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "gradient": {
+      "type": "object",
+      "properties": {
+        "colors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "minValue": { "type": "integer" },
+        "maxValue": { "type": "integer" }
+      }
+    },
+    "legendItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label", "color"],
+        "properties": {
+          "label": { "type": "string" },
+          "color": { "type": "string" }
+        }
+      }
+    },
+    "metadata": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "value"],
+        "properties": {
+          "name": { "type": "string" },
+          "value": { "type": "string" }
+        }
+      }
+    },
+    "showTacticRowBackground": { "type": "boolean" },
+    "tacticRowBackground": { "type": "string" },
+    "selectTechniqueAcrossTactics": { "type": "boolean" },
+    "selectSubtechniquesWithParent": { "type": "boolean" },
+    "selectVisibleTechniques": { "type": "boolean" }
+  }
+}

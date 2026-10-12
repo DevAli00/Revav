@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://revav.dev/schemas/product_profile.schema.json",
+  "title": "Product Profile",
+  "description": "Security product identity and component inventory",
+  "type": "object",
+  "required": ["product_name", "product_type", "version", "vendor"],
+  "properties": {
+    "product_name": {
+      "type": "string",
+      "description": "Canonical product name"
+    },
+    "product_type": {
+      "type": "string",
+      "enum": ["edr", "av", "waf", "hids", "xdr", "ndr", "other"],
+      "description": "Product category"
+    },
+    "vendor": {
+      "type": "string",
+      "description": "Vendor/publisher name"
+    },
+    "version": {
+      "type": "string",
+      "description": "Product version analyzed"
+    },
+    "build_number": {
+      "type": "string",
+      "description": "Specific build number if available"
+    },
+    "platform": {
+      "type": "string",
+      "enum": ["windows", "linux", "macos", "cross-platform"],
+      "description": "Target operating system"
+    },
+    "architecture": {
+      "type": "string",
+      "enum": ["x64", "x86", "arm64", "multi"],
+      "default": "x64"
+    },
+    "analysis_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the analysis was performed"
+    },
+    "analyst": {
+      "type": "string",
+      "description": "Analyst or team who performed the analysis"
+    },
+    "components": {
+      "type": "object",
+      "description": "Installed components by category",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "binary_path"],
+            "properties": {
+              "name": { "type": "string" },
+              "display_name": { "type": "string" },
+              "binary_path": { "type": "string" },
+              "start_type": {
+                "type": "string",
+                "enum": ["auto", "manual", "disabled", "boot", "system"]
+              },
+              "account": { "type": "string" }
+            }
+          }
+        },
+        "drivers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["kernel", "minifilter", "wfp", "other"]
+              },
+              "altitude": { "type": "string" },
+              "load_order_group": { "type": "string" }
+            }
+          }
+        },
+        "processes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" },
+              "service": { "type": "string" },
+              "protected": { "type": "boolean" }
+            }
+          }
+        },
+        "injected_dlls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["dll_name"],
+            "properties": {
+              "dll_name": { "type": "string" },
+              "dll_path": { "type": "string" },
+              "target_processes": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "injection_method": { "type": "string" }
+            }
+          }
+        },
+        "network_endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "url": { "type": "string" },
+              "purpose": {
+                "type": "string",
+                "enum": ["telemetry", "update", "cloud_analysis", "management", "other"]
+              },
+              "protocol": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional analyst notes"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

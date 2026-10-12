@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://revav.dev/schemas/detection_catalog.schema.json",
+  "title": "Detection Catalog",
+  "description": "Extracted detection mechanisms from a security product",
+  "type": "object",
+  "required": ["product_name", "scan_timestamp"],
+  "properties": {
+    "product_name": {
+      "type": "string"
+    },
+    "scan_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scan_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs of extraction scans that produced this catalog"
+    },
+    "hooks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["api_name", "hook_type", "hooking_module", "confidence"],
+        "properties": {
+          "api_name": { "type": "string" },
+          "module": { "type": "string" },
+          "hook_type": {
+            "type": "string",
+            "enum": ["inline", "iat", "eat", "syscall", "trampoline", "hotpatch", "vtable"]
+          },
+          "hooking_module": { "type": "string" },
+          "original_bytes": { "type": "string" },
+          "patched_bytes": { "type": "string" },
+          "hook_address": { "type": "integer" },
+          "target_address": { "type": "integer" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "attack_techniques": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^T\\d{4}(\\.\\d{3})?$" }
+          }
+        }
+      }
+    },
+    "callbacks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["callback_type", "owning_driver", "confidence"],
+        "properties": {
+          "callback_type": {
+            "type": "string",
+            "enum": [
+              "process_create", "thread_create", "image_load",
+              "object_access", "registry", "minifilter",
+              "wfp_callout", "shutdown", "power", "etw_threat_intel"
+            ]
+          },
+          "owning_driver": { "type": "string" },
+          "callback_address": { "type": "integer" },
+          "registration_function": { "type": "string" },
+          "pre_operation": { "type": "boolean" },
+          "post_operation": { "type": "boolean" },
+          "operations_monitored": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "attack_techniques": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^T\\d{4}(\\.\\d{3})?$" }
+          },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule_id", "rule_type", "rule_name", "confidence"],
+        "properties": {
+          "rule_id": { "type": "string" },
+          "rule_type": {
+            "type": "string",
+            "enum": ["yara", "sigma", "snort", "suricata", "custom", "regex", "byte_pattern"]
+          },
+          "rule_name": { "type": "string" },
+          "raw_content": { "type": "string" },
+          "source_file": { "type": "string" },
+          "attack_techniques": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^T\\d{4}(\\.\\d{3})?$" }
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "behavioral_patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "name", "confidence"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "process_tree", "file_activity", "registry_activity",
+              "network_activity", "memory_scan", "api_sequence", "timing"
+            ]
+          },
+          "name": { "type": "string" },
+          "detection_action": {
+            "type": "string",
+            "enum": ["alert", "block", "quarantine", "log"]
+          },
+          "attack_techniques": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^T\\d{4}(\\.\\d{3})?$" }
+          },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "telemetry_channels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["telemetry_type", "name", "confidence"],
+        "properties": {
+          "telemetry_type": {
+            "type": "string",
+            "enum": [
+              "etw_provider", "wmi_subscription", "event_log",
+              "cloud_endpoint", "local_log", "syslog", "amsi"
+            ]
+          },
+          "name": { "type": "string" },
+          "data_sources": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "attack_techniques": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^T\\d{4}(\\.\\d{3})?$" }
+          },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "unhooked_critical": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Critical APIs that were NOT hooked (blind spots)"
+    }
+  }
+}
