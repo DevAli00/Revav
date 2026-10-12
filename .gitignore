@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker-data/
+
+# Analysis artifacts (large binaries — tracked separately)
+targets/
+*.sys
+*.dll
+*.exe
+*.msi
+
+# Do NOT ignore kb/ — it's git-tracked knowledge base
