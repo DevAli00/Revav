@@ -70,14 +70,14 @@ class TestComputeTechniqueScore:
         single = {
             "technique_id": "T1055",
             "mechanisms": [
-                {"mechanism_type": "callback", "quality": "high"},
+                {"mechanism_type": "rule", "quality": "medium"},
             ],
         }
         multi = {
             "technique_id": "T1055",
             "mechanisms": [
-                {"mechanism_type": "callback", "quality": "high"},
-                {"mechanism_type": "hook", "quality": "high"},
+                {"mechanism_type": "rule", "quality": "medium"},
+                {"mechanism_type": "telemetry", "quality": "medium"},
             ],
         }
         weights = ScoringWeights()
